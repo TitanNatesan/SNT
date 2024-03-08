@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #2b3447;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.kaza::-moz-placeholder {
+  color: white;
+  background-color: #1a202c;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #1a202c;
+    font-weight: bold;
+}
