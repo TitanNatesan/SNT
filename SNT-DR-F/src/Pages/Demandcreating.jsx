@@ -1,51 +1,75 @@
 import React, { useState } from "react";
 import snt from "./snt.png";
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Demandcreating = () => {
   const [formValues, setFormValues] = useState({
-    number: "",
-    date: "",
-    unit: "NOS",
-    quantity: "",
-    consignee: "",
-    consigneeOfficer: "",
+    product: "",
+    number: null,
+    quantity: null,
+    nos: "NOS",
+    consignee_name: "",
+    consignee_officer: "",
+    consignee_code: "",
+    demand_code: "",
+    allocation_number: "",
+    accounts_unit: "",
   });
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
+    const { id, value } = e.target;
+    setFormValues({ ...formValues, [id]: value });
   };
 
-  const handleSubmit = () => {
-    console.log("Form Values:", formValues);
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.96.132:8000/DemandRegister/",
+        formValues,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("API Response:", response.data);
+      toast.success("hi");
+    } catch (error) {
+      console.error("Error making POST request:", error.response.data);
+      setError(error.response.data);
+      toast.error("Demand Request doesn't send ");
+    }
   };
 
   return (
-    <div className="flex items-center m-10 justify-evenly">
-      <div>
-        <h1 className="font-bold text-2xl text-white mb-10">
-          Request the <span className="text-yellow-300">Demands </span>here{" "}
-          <span className="text-blue-500">.</span>
-        </h1>
-        <input
-          type="name"
-          name="name"
-          id="name"
-          placeholder="Name"
-          value={formValues.number}
-          onChange={handleChange}
-          className="kaza outline-none focus:p-7 transition-all  text-white ml-16 border-black p-4"
-          style={{ backgroundColor: "#1a202c" }}
-        />
+    <div className="100vh">
+      <div className="flex items-center m-10 justify-evenly overflow-y-hidden">
         <div>
+          <h1 className="font-bold text-2xl text-white mb-10">
+            Request the <span className="text-yellow-300">Demands </span>here
+            <span className="text-blue-500"> .</span>
+          </h1>
+          <input
+            type="name"
+            name="product"
+            id="product"
+            placeholder="Name"
+            onChange={handleChange}
+            className="kaza outline-none  transition-all  text-white ml-16 border-black p-4"
+            style={{ backgroundColor: "#1a202c" }}
+          />
+        <di >
           <div className=" m-5">
             <input
               type="number"
               name="number"
               id="number"
               placeholder="Number"
-              value={formValues.number}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />
             <input
@@ -53,7 +77,6 @@ const Demandcreating = () => {
               name="date"
               id="date"
               placeholder="Date"
-              value={formValues.date}
               onChange={handleChange}
               className="kaza outline-none text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
@@ -65,18 +88,16 @@ const Demandcreating = () => {
               type="number"
               name="quantity"
               id="quantity"
-              placeholder="QUANTITY"  
-              value={formValues.quantity}
+              placeholder="QUANTITY"
               onChange={handleChange}
-              className="kaza focus:p-7 outline-none text-white ml-10 border-black p-4"
+              className="kaza  outline-none text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />
             <select
               name="unit"
               id="unit"
-              value={formValues.unit}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             >
               <option value="NOS">NOS</option>
@@ -86,22 +107,20 @@ const Demandcreating = () => {
           <div className="m-5">
             <input
               type="text"
-              name="consignee"
-              id="consignee"
+              name="consignee_name"
+              id="consignee_name"
               placeholder="CONSIGNEE"
-              value={formValues.consignee}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />{" "}
             <input
               type="text"
-              name="consigneeOfficer"
-              id="consigneeOfficer"
+              name="consignee_officer"
+              id="consignee_officer"
               placeholder="CON.OFFICER"
-              value={formValues.consigneeOfficer}
               onChange={handleChange}
-              className="kaza focus:p-7 outline-none transition-all text-white ml-10 border-black p-4"
+              className="kaza  outline-none transition-all text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />
           </div>
@@ -109,21 +128,19 @@ const Demandcreating = () => {
             <input
               type="text"
               name="consignee"
-              id="consignee"
+              id="consignee_code"
               placeholder="CONSIGNEE Code"
-              value={formValues.consignee}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
-            />{" "}
+            />
             <input
               type="text"
               name="consignee"
-              id="consignee"
+              id="demand_code"
               placeholder="INDENT Code"
-              value={formValues.consignee}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />
           </div>
@@ -131,21 +148,19 @@ const Demandcreating = () => {
             <input
               type="text"
               name="consignee"
-              id="consignee"
+              id="allocation_number"
               placeholder="Allocation NUMBER"
-              value={formValues.consignee}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />
             <input
               type="text"
               name="consignee"
-              id="consignee"
+              id="accounts_unit"
               placeholder="ACCOUNTS UNIT"
-              value={formValues.consignee}
               onChange={handleChange}
-              className="kaza outline-none focus:p-7 transition-all  text-white ml-10 border-black p-4"
+              className="kaza outline-none  transition-all  text-white ml-10 border-black p-4"
               style={{ backgroundColor: "#1a202c" }}
             />
           </div>
@@ -157,13 +172,15 @@ const Demandcreating = () => {
               Submit
             </button>
           </div>
-        </div>
+        </di>
+        
       </div>
-      <div className="w-48 ">
-        <img src={snt} alt="snsst" />
+      <div className=" h-screen">
+        <ToastContainer />
       </div>
     </div>
-  );
-};
+  </div>
+  )
+}
 
 export default Demandcreating;
