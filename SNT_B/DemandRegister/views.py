@@ -7,15 +7,14 @@ from rest_framework import status
 from rest_framework import authentication, permissions
 
 from django.contrib.auth.models import User
-from .serializer import DRFSerial
+from .serializer import DRFSerial,CompSerial
 from .models import DemandForm
 
 
 class CustomAuthToken(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
+        serializer = self.serializer_class(data=request.data,context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
@@ -24,8 +23,10 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+    def get(self,request):
+        return Response("use post method with username and password") 
     
-
+    
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -48,3 +49,21 @@ def getDR(request):
         rd = DemandForm.objects.all()
         serial = DRFSerial(rd,many=True)
         return Response(serial.data)
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def raiseComplaint(request):
+    if request.method=='POST':
+        serial = CompSerial(data=request.data)
+        if serial.is_valid():
+            serial.save()
+            return Response("Success")
+        else:
+            return Response(serial.errors)
+
+@api_view(['POST'])
+def getRaisedDemand(request):
+    if request.method == "POST":
+        demand = DemandForm.objects.filter()
+        return Response("Called")
